@@ -1,10 +1,6 @@
-import Header from "../../components/header/Header.jsx";
-import Footer from "../../components/footer/Footer.jsx";
-
 function Home () {
     return (
         <div>
-            <Header />
             <main>
                 <div className="hero">
                     <section className="hero-content">
@@ -53,7 +49,6 @@ function Home () {
                     </div>
                 </section>
             </main>
-            <Footer />
         </div>
     )
 }

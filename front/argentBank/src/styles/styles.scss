@@ -1,0 +1,14 @@
+// Partial files
+@use "./partial/variables";
+@use "./partial/mixins";
+
+// Pages files
+@use "../pages/home/home";
+@use "../pages/sign-in/signIn";
+@use "../pages/user/user";
+
+
+// Components files
+@use "../components/header/header";
+@use "../components/footer/footer";
+@use "../components/buttons/buttons";

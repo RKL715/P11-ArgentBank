@@ -1,6 +1,7 @@
 // Partial files
 @use "./partial/variables";
 @use "./partial/mixins";
+@use "./partial/global";
 
 // Pages files
 @use "../pages/home/home";

@@ -9,7 +9,7 @@ export const userLogin = createAsyncThunk(
         const response = await axios.post('http://localhost:3001/api/v1/user/login', userCredentials);
         console.log("TEST Response :", response)
         const data = response.data.body;
-        localStorage.setItem('token', data.token);
+        sessionStorage.setItem('token', data.token);
         return data;
     })
 
@@ -17,7 +17,7 @@ const userSlice = createSlice({
     name : 'user',
     initialState: {
         loading : false,
-        user : null,
+        user : sessionStorage.getItem('token') ? {} : null, // if token exists, user is logged in
         error : null,
     },
     reducers : {},

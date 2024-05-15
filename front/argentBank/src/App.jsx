@@ -6,7 +6,6 @@ import Error from "./pages/error/Error.jsx";
 import Header from "./components/header/Header.jsx";
 import Footer from "./components/footer/Footer.jsx";
 
-
 function App() {
   return (
     <div className="App">
@@ -14,7 +13,7 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/SignIn" element={<SignIn />} />
-            <Route path="/User" element={<User />} />
+            <Route path="/Profile" element={<User />} />
             <Route path="/Error" element={<Error />} />
         </Routes>
         <Footer />

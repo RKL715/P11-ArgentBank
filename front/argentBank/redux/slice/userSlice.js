@@ -21,6 +21,7 @@ const userSlice = createSlice({
         error : null,
     },
     reducers : {},
+
     extraReducers :(builder) => {
         builder
             .addCase(userLogin.pending , (state) => {

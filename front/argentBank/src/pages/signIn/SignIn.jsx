@@ -9,6 +9,9 @@ const LoginForm = () => {
     // states
     const [ email, setEmail ] = useState("");
     const [ password, setPassword ] = useState("");
+    const [ emailError, setEmailError ] = useState("");
+    const [ passwordError, setPasswordError ] = useState("");
+    const [ showPassword, setShowPassword ] = useState(false);
 
     // redux state
     const { loading, error } = useSelector((state) => state.user);
@@ -20,13 +23,30 @@ const LoginForm = () => {
         let userCredentials = {
             email, password
         }
-        dispatch(userLogin(userCredentials)).then((response) => {
+
+        // Validation des champs
+        if (!email || !password) {
+            setEmailError ("Email is required");
+            setPasswordError ("Password is required");
+            return;
+        }
+        else {
+            setEmailError("");
+            setPasswordError("")
+        }
+
+        // Dispatch de l'action userLogin
+        dispatch(userLogin(userCredentials))
+            .then((response) => {
             if (response.payload) {
                 setEmail("");
                 setPassword("");
                 navigate('/Profile');
             }
-    });
+            else if (response.error) {
+                setPasswordError(response.error.message);
+            }
+        });
     }
 
     return (
@@ -37,13 +57,26 @@ const LoginForm = () => {
                 <form onSubmit={handleSubmit}>
                     <div className="input-wrapper">
                         <label htmlFor="email">Email</label>
-                        <input type="text" id="email" value={email}
-                        onChange={(evt)=>setEmail(evt.target.value)}/>
+                        <input
+                            type="text"
+                            id="email"
+                            value={email}
+                            onChange={(evt)=>setEmail(evt.target.value)}
+                        />
+                            {emailError && <p className="error-message">{emailError}</p>}
                     </div>
                     <div className="input-wrapper">
                         <label htmlFor="password">Password</label>
-                        <input type="password" id="password" value={password}
-                        onChange={(evt)=>setPassword(evt.target.value)}/>
+                        <input type={showPassword ? "text" : "password"}
+                               id="password"
+                               value={password}
+                               onChange={(evt)=>setPassword(evt.target.value)}
+                        />
+                                {passwordError && <p className="error-message">{passwordError}</p>}
+                        <button type="button" onClick={() => setShowPassword(!showPassword)}>
+                            <i className="fa fa-eye"></i>
+                            {showPassword ? "Hide" : "Show"}
+                        </button>
                     </div>
                     <div className="input-remember">
                         <input type="checkbox" id="remember-me"/>
@@ -53,11 +86,10 @@ const LoginForm = () => {
                         {loading?"Loading...":"Sign In"}
                     </button>
                     {error && <p className="error-message">{error}</p>}
-                    {/*<a href="./User" className="sign-in-button">Sign In</a>*/}
                 </form>
         </section>
     </main>
-    );
+    )
 }
 
 export default LoginForm;

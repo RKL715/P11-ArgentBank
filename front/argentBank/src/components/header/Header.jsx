@@ -1,4 +1,5 @@
 function Header () {
+
     return (
         <header>
             <nav className="main-nav">
@@ -10,7 +11,17 @@ function Header () {
                     />
                     <h1 className="sr-only">Argent Bank</h1>
                 </a>
-                <div>
+                <div className="main-nav-connected">
+                    <a className="main-nav-item" href="/profile">
+                        <i className="fa fa-user-circle"></i>
+                        Tony
+                    </a>
+                    <a className="main-nav-item" href="/">
+                        <i className="fa fa-sign-out"></i>
+                        Sign Out
+                    </a>
+                </div>
+                <div className="main-nav-default">
                     <a className="main-nav-item" href="/SignIn">
                         <i className="fa fa-user-circle"></i>
                         Sign In

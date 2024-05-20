@@ -14,11 +14,14 @@ const LoginForm = () => {
     const [ emailError, setEmailError ] = useState("");
     const [ passwordError, setPasswordError ] = useState("");
     const [ showPassword, setShowPassword ] = useState(false);
+    const [ rememberMe, setRememberMe ] = useState(false);
 
     // redux state
     const { user, loading, error } = useSelector((state) => state.user || defaultUser);
 
+    // redux dispatch
     const dispatch = useDispatch();
+    // react-router navigate
     const navigate = useNavigate();
 
     useEffect (() => {
@@ -27,10 +30,33 @@ const LoginForm = () => {
     }
     }, [user, dispatch, navigate]);
 
+    useEffect (() => {
+        const savedEmail = localStorage.getItem('email');
+        const savedPassword = localStorage.getItem('password');
+        const savedRememberMe = localStorage.getItem('rememberMe');
+
+        if (savedEmail && savedPassword && savedRememberMe) {
+            setEmail(savedEmail);
+            setPassword(savedPassword);
+            setRememberMe(savedRememberMe);
+        }
+    } , []);
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         let userCredentials = {
             email, password
+        }
+
+        // Sauvegarde des données dans le localStorage
+        if (rememberMe) {
+            localStorage.setItem('email', email);
+            localStorage.setItem('password', password);
+            localStorage.setItem('rememberMe', rememberMe);
+        } else {
+            localStorage.removeItem('email');
+            localStorage.removeItem('password');
+            localStorage.removeItem('rememberMe');
         }
 
         // Validation des champs
@@ -91,7 +117,11 @@ const LoginForm = () => {
                         </button>
                     </div>
                     <div className="input-remember">
-                        <input type="checkbox" id="remember-me"/>
+                        <input type="checkbox"
+                               id="remember-me"
+                               checked={rememberMe}
+                        onChange={(evt)=>setRememberMe(evt.target.checked)}
+                        />
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
                     <button type="submit" className="sign-in-button">

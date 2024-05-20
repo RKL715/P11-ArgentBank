@@ -1,4 +1,13 @@
+import { userLogout } from '../../../redux/slice/userSlice';
+import {useDispatch} from "react-redux";
+
 function Header () {
+        const dispatch = useDispatch();
+
+        const handleLogout = () => {
+            event.preventDefault()
+            dispatch(userLogout());
+        }
 
     return (
         <header>
@@ -16,7 +25,7 @@ function Header () {
                         <i className="fa fa-user-circle"></i>
                         Tony
                     </a>
-                    <a className="main-nav-item" href="/">
+                    <a className="main-nav-item" href="/" onClick={handleLogout}>
                         <i className="fa fa-sign-out"></i>
                         Sign Out
                     </a>

@@ -9,7 +9,6 @@ export const userLogin = createAsyncThunk(
     try {
         const response = await axios.post('http://localhost:3001/api/v1/user/login', userCredentials);
         const data = response.data.body; // récupère les données de l'utilisateur
-
         sessionStorage.setItem('token', data.token);
         return data; // renvoie les données de l'utilisateur
     }
@@ -23,10 +22,23 @@ const userSlice = createSlice({
     name : 'user',
     initialState: {
         loading : false,
-        user : sessionStorage.getItem('token') ? {} : null, // if token exists, user is logged in
+        user : { token: sessionStorage.getItem('token') || null }, // if token exists, user is logged in, else token is null
         error : null,
     },
-    reducers : {},
+    reducers : {
+        setUserFromToken : (state) => {
+            const token = sessionStorage.getItem('token');
+            if (token) {
+                state.user = { token };
+            }
+        },
+
+        // Ajout d'un gestionnaire d'action pour la déconnexion de l'utilisateur
+        userLogout : (state) => {
+            sessionStorage.removeItem('token');
+            state.user = null;
+        }
+    },
 
     // Ajout des gestionnaires d'action pour le thunk asynchrone
     extraReducers :(builder) => {
@@ -38,7 +50,7 @@ const userSlice = createSlice({
             })
             .addCase(userLogin.fulfilled , (state, action) => { // si la requête est réussie
                 state.loading = false;
-                state.user = { token:action.payload };
+                state.user = {token: action.payload.token } ;
                 state.error = null;
             })
             .addCase(userLogin.rejected , (state) => { // si la requête est rejetée
@@ -49,4 +61,5 @@ const userSlice = createSlice({
     }
 });
 
+export const { setUserFromToken, userLogout } = userSlice.actions;
 export default userSlice.reducer;

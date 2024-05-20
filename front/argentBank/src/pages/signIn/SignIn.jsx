@@ -1,8 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {userLogin} from "../../../redux/slice/userSlice.js";
+import {userLogin, setUserFromToken} from "../../../redux/slice/userSlice.js";
 import {useNavigate} from "react-router-dom";
+import { persistor } from "../../../redux/store/configureStore.js";
 
+const defaultUser = { loading : false , error : null };
 
 const LoginForm = () => {
 
@@ -14,10 +16,17 @@ const LoginForm = () => {
     const [ showPassword, setShowPassword ] = useState(false);
 
     // redux state
-    const { loading, error } = useSelector((state) => state.user);
+    const { user, loading, error } = useSelector((state) => state.user || defaultUser);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    useEffect (() => {
+        if (persistor.getState().bootstrapped) {
+        dispatch(setUserFromToken());
+    }
+    }, [user, dispatch, navigate]);
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         let userCredentials = {
@@ -26,8 +35,8 @@ const LoginForm = () => {
 
         // Validation des champs
         if (!email || !password) {
-            setEmailError ("Email is required");
-            setPasswordError ("Password is required");
+            setEmailError ("L'email est requis");
+            setPasswordError ("Le mot de passe est requis");
             return;
         }
         else {
@@ -38,14 +47,17 @@ const LoginForm = () => {
         // Dispatch de l'action userLogin
         dispatch(userLogin(userCredentials))
             .then((response) => {
-            if (response.payload) {
+                if (response.payload) {
                 setEmail("");
                 setPassword("");
-                navigate('/Profile');
+                navigate('/Profile')
             }
             else if (response.error) {
                 setPasswordError(response.error.message);
             }
+        })
+        .catch ((error) => {
+            console.log("error", error);
         });
     }
 
@@ -91,5 +103,4 @@ const LoginForm = () => {
     </main>
     )
 }
-
 export default LoginForm;

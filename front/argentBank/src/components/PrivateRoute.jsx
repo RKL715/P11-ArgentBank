@@ -2,10 +2,10 @@ import {Navigate, useLocation} from "react-router-dom";
 import {useSelector} from "react-redux";
 
 function PrivateRoute ({ children }) {
-    const  { user: authUser} = useSelector(state => state.user);
+    const  user = useSelector(state => state.user);
     const location = useLocation();
 
-    if (!authUser) {
+    if (!user || !user.token) {
         return <Navigate to="/SignIn" state={{ from: location }}/>;
 }
 

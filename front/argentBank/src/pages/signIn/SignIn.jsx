@@ -3,6 +3,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {userLogin, setUserFromToken} from "../../../redux/slice/userSlice.js";
 import {useNavigate} from "react-router-dom";
 import { persistor } from "../../../redux/store/configureStore.js";
+import useLocalStorage from "../../hooks/useLocalStorage.js";
 
 // Import des composants du SignIn
 import  InputField  from "../../components/signIn/InputField.jsx";
@@ -14,12 +15,12 @@ const defaultUser = { loading : false , error : null };
 const LoginForm = () => {
 
     // states
-    const [ email, setEmail ] = useState("");
+    const [ email, setEmail ] = useLocalStorage("email", '');
     const [ password, setPassword ] = useState("");
     const [ emailError, setEmailError ] = useState("");
     const [ passwordError, setPasswordError ] = useState("");
     const [ showPassword, setShowPassword ] = useState(false);
-    const [ rememberMe, setRememberMe ] = useState(false);
+    const [ rememberMe, setRememberMe ] = useLocalStorage("rememberMe", false);
 
     // redux state
     const { user, loading, error } = useSelector((state) => state.user || defaultUser);

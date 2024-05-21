@@ -4,6 +4,11 @@ import {userLogin, setUserFromToken} from "../../../redux/slice/userSlice.js";
 import {useNavigate} from "react-router-dom";
 import { persistor } from "../../../redux/store/configureStore.js";
 
+// Import des composants du SignIn
+import  InputField  from "../../components/signIn/InputField.jsx";
+import  RememberMe  from "../../components/signIn/RememberMe.jsx";
+import  SubmitButton from "../../components/signIn/SubmitButton.jsx";
+
 const defaultUser = { loading : false , error : null };
 
 const LoginForm = () => {
@@ -93,40 +98,31 @@ const LoginForm = () => {
                 <i className="fa fa-user-circle sign-in-icon"></i>
                 <h1>Sign In</h1>
                 <form onSubmit={handleSubmit}>
-                    <div className="input-wrapper">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="text"
-                            id="email"
-                            value={email}
-                            onChange={(evt)=>setEmail(evt.target.value)}
-                        />
-                            {emailError && <p className="error-message">{emailError}</p>}
-                    </div>
-                    <div className="input-wrapper">
-                        <label htmlFor="password">Password</label>
-                        <input type={showPassword ? "text" : "password"}
-                               id="password"
-                               value={password}
-                               onChange={(evt)=>setPassword(evt.target.value)}
-                        />
-                                {passwordError && <p className="error-message">{passwordError}</p>}
+                    <InputField
+                        id="email"
+                        label="Email"
+                        type="email"
+                        value={email}
+                        onChange={(evt)=>setEmail(evt.target.value)}
+                        error={emailError}
+                    />
+                    <InputField
+                        id="password"
+                        label="Password"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(evt)=>setPassword(evt.target.value)}
+                        error={passwordError}
+                    />
                         <button type="button" onClick={() => setShowPassword(!showPassword)}>
                             <i className="fa fa-eye"></i>
                             {showPassword ? "Hide" : "Show"}
                         </button>
-                    </div>
-                    <div className="input-remember">
-                        <input type="checkbox"
-                               id="remember-me"
-                               checked={rememberMe}
+                    <RememberMe
+                        checked={rememberMe}
                         onChange={(evt)=>setRememberMe(evt.target.checked)}
-                        />
-                        <label htmlFor="remember-me">Remember me</label>
-                    </div>
-                    <button type="submit" className="sign-in-button">
-                        {loading?"Loading...":"Sign In"}
-                    </button>
+                    />
+                    <SubmitButton loading={loading} />
                     {error && <p className="error-message">{error}</p>}
                 </form>
         </section>

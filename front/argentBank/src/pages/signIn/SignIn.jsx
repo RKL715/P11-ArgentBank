@@ -13,7 +13,6 @@ import  SubmitButton from "../../components/signIn/SubmitButton.jsx";
 const defaultUser = { loading : false , error : null };
 
 const LoginForm = () => {
-
     // states
     const [ email, setEmail ] = useLocalStorage("email", '');
     const [ password, setPassword ] = useState("");
@@ -21,7 +20,6 @@ const LoginForm = () => {
     const [ passwordError, setPasswordError ] = useState("");
     const [ showPassword, setShowPassword ] = useState(false);
     const [ rememberMe, setRememberMe ] = useLocalStorage("rememberMe", false);
-
     // redux state
     const { user, loading, error } = useSelector((state) => state.user || defaultUser);
 
@@ -35,18 +33,6 @@ const LoginForm = () => {
         dispatch(setUserFromToken());
     }
     }, [user, dispatch, navigate]);
-
-    useEffect (() => {
-        const savedEmail = localStorage.getItem('email');
-        const savedPassword = localStorage.getItem('password');
-        const savedRememberMe = localStorage.getItem('rememberMe');
-
-        if (savedEmail && savedPassword && savedRememberMe) {
-            setEmail(savedEmail);
-            setPassword(savedPassword);
-            setRememberMe(savedRememberMe);
-        }
-    } , []);
 
     const handleSubmit = (evt) => {
         evt.preventDefault();

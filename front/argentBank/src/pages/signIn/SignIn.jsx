@@ -100,11 +100,9 @@ const LoginForm = () => {
                         value={password}
                         onChange={(evt)=>setPassword(evt.target.value)}
                         error={passwordError}
+                        showPassword={showPassword}
+                        toggleShowPassword={()=>setShowPassword(!showPassword)}
                     />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)}>
-                            <i className="fa fa-eye"></i>
-                            {showPassword ? "Hide" : "Show"}
-                        </button>
                     <RememberMe
                         checked={rememberMe}
                         onChange={(evt)=>setRememberMe(evt.target.checked)}

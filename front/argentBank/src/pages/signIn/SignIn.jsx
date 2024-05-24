@@ -1,16 +1,12 @@
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {userLogin, setUserFromToken} from "../../../redux/slice/userSlice.js";
+import {userLogin, selectUser} from "../../../redux/slice/userSlice.js";
 import {useNavigate} from "react-router-dom";
-import { persistor } from "../../../redux/store/configureStore.js";
 import useLocalStorage from "../../hooks/useLocalStorage.js";
-
 // Import des composants du SignIn
 import  InputField  from "../../components/signIn/InputField.jsx";
 import  RememberMe  from "../../components/signIn/RememberMe.jsx";
 import  SubmitButton from "../../components/signIn/SubmitButton.jsx";
-
-const defaultUser = { loading : false , error : null };
 
 const LoginForm = () => {
     // states
@@ -21,25 +17,17 @@ const LoginForm = () => {
     const [ showPassword, setShowPassword ] = useState(false);
     const [ rememberMe, setRememberMe ] = useLocalStorage("rememberMe", false);
     // redux state
-    const { user, loading, error } = useSelector((state) => state.user || defaultUser);
-
+    const { user, loading, error } = useSelector(selectUser);
     // redux dispatch
     const dispatch = useDispatch();
     // react-router navigate
     const navigate = useNavigate();
-
-    useEffect (() => {
-        if (persistor.getState().bootstrapped) {
-        dispatch(setUserFromToken());
-    }
-    }, [user, dispatch, navigate]);
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
         let userCredentials = {
             email, password
         }
-
         // Sauvegarde des données dans le localStorage
         if (rememberMe) {
             localStorage.setItem('email', email);
@@ -50,7 +38,6 @@ const LoginForm = () => {
             localStorage.removeItem('password');
             localStorage.removeItem('rememberMe');
         }
-
         // Validation des champs
         if (!email || !password) {
             setEmailError ("L'email est requis");

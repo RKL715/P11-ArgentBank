@@ -1,7 +1,7 @@
 import {Route, Routes, useLocation, useNavigate} from 'react-router-dom'
 import Home from "./pages/home/Home.jsx";
 import SignIn from "./pages/signIn/SignIn.jsx";
-import User from "./pages/user/User.jsx";
+import Profile from "./pages/user/Profile.jsx";
 import Error from "./pages/error/Error.jsx";
 import Header from "./components/header/Header.jsx";
 import Footer from "./components/footer/Footer.jsx";
@@ -9,7 +9,6 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import {useEffect} from "react";
 
 function App() {
-
     history.navigate = useNavigate();
     history.location = useLocation();
 
@@ -33,7 +32,7 @@ function App() {
         <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/SignIn" element={<SignIn />} />
-            <Route path="/Profile" element={<PrivateRoute><User /></PrivateRoute>} /> {/* On utilise le composant PrivateRoute pour protéger la route */}
+            <Route path="/Profile" element={<PrivateRoute><Profile /></PrivateRoute>} /> {/* On utilise le composant PrivateRoute pour protéger la route */}
             <Route path="/Error" element={<Error />} />
         </Routes>
         <Footer />

@@ -1,15 +1,9 @@
-import {Navigate, useLocation} from "react-router-dom";
-import {useSelector} from "react-redux";
+import {Navigate} from "react-router-dom";
 
-function PrivateRoute ({ children }) {
-    const  user = useSelector(state => state.user);
-    const location = useLocation();
+function PrivateRoute({ children }) {
+    const token = sessionStorage.getItem('token');
 
-    if (!user || !user.token) {
-        return <Navigate to="/SignIn" state={{ from: location }}/>;
-}
-
-    return children;
+    return token ? children : <Navigate to="/SignIn" />;
 }
 
 export default PrivateRoute;

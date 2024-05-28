@@ -46,3 +46,18 @@
   padding: 5px;
   font-size: 1.2rem;
 }
+
+.input-group {
+  display: flex;
+  align-content: center;
+
+  input {
+    flex-grow: 1;
+  }
+
+  button {
+    cursor: pointer;
+    border-color: #00bc77;
+    background-color: #00bc77;
+  }
+}

@@ -15,7 +15,7 @@ function Home () {
                     <h2 className="sr-only">Features</h2>
                     <div className="feature-item">
                         <img
-                            src={"../public/img/icon-chat.webp"}
+                            src={"/img/icon-chat.webp"}
                             alt="Chat Icon"
                             className="feature-icon"/>
                         <h3 className="feature-item-title">You are our #1 priority</h3>
@@ -26,7 +26,7 @@ function Home () {
                     </div>
                     <div className="feature-item">
                         <img
-                            src={"../public/img/icon-money.webp"}
+                            src={"/img/icon-money.webp"}
                             alt="Money Icon"
                             className="feature-icon"
                         />
@@ -37,7 +37,7 @@ function Home () {
                     </div>
                     <div className="feature-item">
                         <img
-                            src={"../public/img/icon-security.webp"}
+                            src={"/img/icon-security.webp"}
                             alt="Security Icon"
                             className="feature-icon"
                         />

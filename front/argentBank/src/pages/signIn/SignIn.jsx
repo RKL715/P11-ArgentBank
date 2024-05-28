@@ -7,6 +7,8 @@ import useLocalStorage from "../../hooks/useLocalStorage.js";
 import  InputField  from "../../components/signIn/InputField.jsx";
 import  RememberMe  from "../../components/signIn/RememberMe.jsx";
 import  SubmitButton from "../../components/signIn/SubmitButton.jsx";
+import {persistStore} from "redux-persist";
+import store from "../../../redux/store/configureStore.js";
 
 const LoginForm = () => {
     // states
@@ -28,6 +30,27 @@ const LoginForm = () => {
         let userCredentials = {
             email, password
         }
+
+        // Gestion des erreurs
+        const handleError = (payload) => {
+            if (payload.message.includes("User")) {
+                setEmailError("Email incorrect");
+            }
+            if (payload.message.includes("Password")) {
+                setPasswordError("Mot de passe incorrect");
+            }
+            if (payload.message.includes("User" && "Password")) {
+                setEmailError("Email incorrect");
+                setPasswordError("Mot de passe incorrect");
+            }
+            purgePersistedState();
+        }
+        // Purge des données
+        const purgePersistedState = () => {
+            const persistor = persistStore(store);
+            persistor.purge();
+        }
+
         // Sauvegarde des données dans le localStorage
         if (rememberMe) {
             localStorage.setItem('email', email);
@@ -38,10 +61,10 @@ const LoginForm = () => {
             localStorage.removeItem('password');
             localStorage.removeItem('rememberMe');
         }
-        // Validation des champs
+        // Validation des champs si vides
         if (!email || !password) {
-            setEmailError ("L'email est requis");
-            setPasswordError ("Le mot de passe est requis");
+            setEmailError ("Un email est requis");
+            setPasswordError ("Un mot de passe est requis");
             return;
         }
         else {
@@ -52,17 +75,20 @@ const LoginForm = () => {
         // Dispatch de l'action userLogin
         dispatch(userLogin(userCredentials))
             .then((response) => {
-                if (response.payload) {
+                if (response.payload && response.payload.status !== 400) {
                 setEmail("");
                 setPassword("");
                 navigate('/Profile')
             }
-            else if (response.error) {
-                setPasswordError(response.error.message);
+            else if (response.payload && response.payload.status === 400) {
+                console.log("errorTEST", response.payload.message);
+                handleError (response.payload);
             }
         })
         .catch ((error) => {
             console.log("error", error);
+            handleError(error);
+            purgePersistedState();
         });
     }
 

@@ -68,10 +68,10 @@ const userSlice = createSlice({
                         action.payload  ;
                     state.error = null;
                 })
-                .addCase(userLogin.rejected , (state) => { // si la requête est rejetée
+                .addCase(userLogin.rejected , (state, action) => { // si la requête est rejetée
                     state.loading = false;
                     state.user = null;
-                    state.error = "Email ou mot de passe incorrect. Veuillez réessayer.";
+                    state.error = action.error.message
                 })
             // addCase pour userLogout
             // .addCase(userLogout.pending , (state) => {

@@ -17,7 +17,6 @@ const initialState = {
 export const userLogin = createAsyncThunk(
 'user/login',
     async (userCredentials, {rejectWithValue}) => {
-        console.log('userLogin called');
     try {
         const response = await axios.post('http://localhost:3001/api/v1/user/login', userCredentials);
         const data = response.data; // récupère les données de l'utilisateur
@@ -30,6 +29,7 @@ export const userLogin = createAsyncThunk(
 
         return {
             ...data.body,
+            userName : profileResponse.data.body.userName,
             profile : profileResponse.data.body,
         };
     }

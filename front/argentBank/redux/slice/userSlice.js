@@ -1,7 +1,6 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 
-
 // Initialisation de l'état de l'utilisateur
 const initialState = {
     loading : false,
@@ -46,9 +45,12 @@ const userSlice = createSlice({
     reducers : {
                // Ajout d'un gestionnaire d'action pour la déconnexion de l'utilisateur
         userLogout : (state) => {
-            console.log('userLogout called');
             sessionStorage.removeItem('token');
              state.user = { token : null, username : null, email : null};
+        },
+        updateUserName : (state, action) => {
+            state.user.userName = action.payload;
+
         }
     },
 
@@ -89,7 +91,7 @@ const userSlice = createSlice({
 )
 
 // export des actions
-export const {  userLogout } = userSlice.actions;
+export const {  userLogout, updateUserName } = userSlice.actions;
 // export du reducer
 export default userSlice.reducer;
 // export du sélecteur

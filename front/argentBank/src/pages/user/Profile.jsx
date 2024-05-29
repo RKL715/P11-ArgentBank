@@ -1,10 +1,23 @@
+import { useSelector} from "react-redux";
+import EditNameForm from "../../components/editNameForm/EditNameForm.jsx";
+import { useState } from  "react";
+
+
 function Profile  () {
+    const user = useSelector((state) => state.user) || {};
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    }
+
     return (
         <main className="main bg-dark">
             <div className="header">
-                <h1>Welcome back<br/>Tony Jarvis!</h1>
-                <button className="edit-button">Edit Name</button>
+                <h1>Welcome back<br/>{user.userName}</h1>
+                {!isModalOpen && <button className="edit-button" onClick={toggleModal}>Edit Name</button>}
             </div>
+            {isModalOpen && <EditNameForm toggleModal={toggleModal}/>}
             <h2 className="sr-only">Accounts</h2>
             <section className="account">
                 <div className="account-content-wrapper">

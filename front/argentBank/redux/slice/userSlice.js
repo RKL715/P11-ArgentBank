@@ -75,17 +75,6 @@ const userSlice = createSlice({
                     state.user = null;
                     state.error = action.error.message
                 })
-            // addCase pour userLogout
-            // .addCase(userLogout.pending , (state) => {
-            //     state.loading = true;
-            //     state.user = null;
-            //     state.error = null;
-            // })
-            // .addCase(userLogout.fulfilled , (state) => {
-            //     state.loading = false;
-            //     state.user = null;
-            //     state.error = null;
-            // })
         },
     }
 )

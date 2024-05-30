@@ -46,14 +46,13 @@ const userSlice = createSlice({
                // Ajout d'un gestionnaire d'action pour la déconnexion de l'utilisateur
         userLogout : (state) => {
             sessionStorage.removeItem('token');
-             state.user = { token : null, username : null, email : null};
+            localStorage.removeItem('token');
+             state.user = initialState.user;
         },
         updateUserName : (state, action) => {
             state.user.userName = action.payload;
-
         }
     },
-
 
         // Ajout des gestionnaires d'action pour le thunk asynchrone
         extraReducers :(builder) => {

@@ -19,7 +19,7 @@ const LoginForm = () => {
     const [ showPassword, setShowPassword ] = useState(false);
     const [ rememberMe, setRememberMe ] = useLocalStorage("rememberMe", false);
     // redux state
-    const { user, loading, error } = useSelector(selectUser);
+    const {loading, error } = useSelector(selectUser);
     // redux dispatch
     const dispatch = useDispatch();
     // react-router navigate
@@ -31,7 +31,25 @@ const LoginForm = () => {
             email, password
         }
 
-        // Gestion des erreurs
+        // FORM VALIDATION
+        // Validation des champs si vides
+        if (!email) {
+            setEmailError("Un email est requis");
+        }
+        else {
+            setEmailError("");
+        }
+        if (!password) {
+            setPasswordError ("Un mot de passe est requis");
+        }
+        else {
+            setPasswordError("")
+        }
+        if (!email || !password) {
+            return;
+        }
+
+        //  Gestion des erreurs
         const handleError = (payload) => {
             if (payload.message.includes("User")) {
                 setEmailError("Email incorrect");
@@ -51,7 +69,7 @@ const LoginForm = () => {
             persistor.purge();
         }
 
-        // Sauvegarde des données dans le localStorage
+        // REMEMBER ME : Stockage des données dans le localStorage
         if (rememberMe) {
             localStorage.setItem('email', email);
             localStorage.setItem('password', password);
@@ -61,16 +79,7 @@ const LoginForm = () => {
             localStorage.removeItem('password');
             localStorage.removeItem('rememberMe');
         }
-        // Validation des champs si vides
-        if (!email || !password) {
-            setEmailError ("Un email est requis");
-            setPasswordError ("Un mot de passe est requis");
-            return;
-        }
-        else {
-            setEmailError("");
-            setPasswordError("")
-        }
+
 
         // Dispatch de l'action userLogin
         dispatch(userLogin(userCredentials))

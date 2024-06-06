@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Initialisation de l'état de l'utilisateur
+// INITIAL STATE pour l'utilisateur
 const initialState = {
     loading : false,
     user : {
@@ -12,7 +12,7 @@ const initialState = {
     error : null,
 }
 
-// Création d'un thunk asynchrone pour la connexion de l'utilisateur
+// CREATE ASYNC THUNK pour la connexion de l'utilisateur
 export const userLogin = createAsyncThunk(
 'user/login',
     async (userCredentials, {rejectWithValue}) => {
@@ -21,41 +21,39 @@ export const userLogin = createAsyncThunk(
         const data = response.data; // récupère les données de l'utilisateur
         sessionStorage.setItem('token', data.body.token);
 
-        // Fetch profile
+        // FETCH PROFILE
         const profileResponse = await axios.post('http://localhost:3001/api/v1/user/profile', {},{
             headers : { Authorization : `Bearer ${data.body.token}` }
         });
-
         return {
             ...data.body,
             userName : profileResponse.data.body.userName,
             profile : profileResponse.data.body,
         };
     }
-    catch (error) { // si une erreur se produit
-        console.log ("error", error.response.data);
-    return rejectWithValue(error.response.data); // renvoie l'erreur
+    catch (error) {
+    return rejectWithValue(error.response.data);
     }
 })
 
-// Création d'une Slice pour l'utilisateur
+// CREATE SLICE pour l'utilisateur
 const userSlice = createSlice({
     name : 'user',
     initialState : initialState,
     reducers : {
-               // Ajout d'un gestionnaire d'action pour la déconnexion de l'utilisateur
+               // ADD REDUCER for userLogout
         userLogout : (state) => {
             sessionStorage.removeItem('token');
-             state.user = { token : null, username : null, email : null};
+            localStorage.removeItem('token');
+             state.user = initialState.user;
         },
+             // ADD REDUCER for updateUserName
         updateUserName : (state, action) => {
             state.user.userName = action.payload;
-
         }
     },
 
-
-        // Ajout des gestionnaires d'action pour le thunk asynchrone
+        // ADD EXTRA REDUCERS
         extraReducers :(builder) => {
             builder
                 // addCase pour userLogin
@@ -75,17 +73,6 @@ const userSlice = createSlice({
                     state.user = null;
                     state.error = action.error.message
                 })
-            // addCase pour userLogout
-            // .addCase(userLogout.pending , (state) => {
-            //     state.loading = true;
-            //     state.user = null;
-            //     state.error = null;
-            // })
-            // .addCase(userLogout.fulfilled , (state) => {
-            //     state.loading = false;
-            //     state.user = null;
-            //     state.error = null;
-            // })
         },
     }
 )

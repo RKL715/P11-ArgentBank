@@ -7,8 +7,7 @@ import useLocalStorage from "../../hooks/useLocalStorage.js";
 import  InputField  from "../../components/signIn/InputField.jsx";
 import  RememberMe  from "../../components/signIn/RememberMe.jsx";
 import  SubmitButton from "../../components/signIn/SubmitButton.jsx";
-import {persistStore} from "redux-persist";
-import store from "../../../redux/store/configureStore.js";
+import { persistor } from "../../../redux/store/configureStore.js";
 
 const LoginForm = () => {
     // states
@@ -61,12 +60,7 @@ const LoginForm = () => {
                 setEmailError("Email incorrect");
                 setPasswordError("Mot de passe incorrect");
             }
-            purgePersistedState();
-        }
-        // Purge des données
-        const purgePersistedState = () => {
-            const persistor = persistStore(store);
-            persistor.purge();
+           persistor.purge();
         }
 
         // REMEMBER ME : Stockage des données dans le localStorage
@@ -97,7 +91,7 @@ const LoginForm = () => {
         .catch ((error) => {
             console.log("error", error);
             handleError(error);
-            purgePersistedState();
+           persistor.purge();
         });
     }
 

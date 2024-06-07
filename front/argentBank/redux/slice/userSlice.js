@@ -29,12 +29,33 @@ export const userLogin = createAsyncThunk(
             ...data.body,
             userName : profileResponse.data.body.userName,
             profile : profileResponse.data.body,
+            id : profileResponse.data.body.id // add user ID to state
         };
     }
     catch (error) {
     return rejectWithValue(error.response.data);
     }
 })
+
+// ASYNC THUNK pour la mise à jour du nom de l'utilisateur
+export const updateUserNameOnServer = createAsyncThunk(
+    'user/updateUserName',
+async (newName, {rejectWithValue}) => {
+    try {
+        const response = await axios.put('http://localhost:3001/api/v1/user/profile',
+            { userName : newName },
+            {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${sessionStorage.getItem('token')}`
+            },
+        });
+        return response.data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+}
+        );
 
 // CREATE SLICE pour l'utilisateur
 const userSlice = createSlice({
@@ -47,10 +68,6 @@ const userSlice = createSlice({
             localStorage.removeItem('token');
              state.user = initialState.user;
         },
-             // ADD REDUCER for updateUserName
-        updateUserName : (state, action) => {
-            state.user.userName = action.payload;
-        }
     },
 
         // ADD EXTRA REDUCERS
@@ -73,12 +90,15 @@ const userSlice = createSlice({
                     state.user = null;
                     state.error = action.error.message
                 })
+                .addCase(updateUserNameOnServer.fulfilled, (state, action) => {
+                    state.user.userName = action.payload.body.userName;
+                })
         },
     }
 )
 
 // export des actions
-export const {  userLogout, updateUserName } = userSlice.actions;
+export const {  userLogout } = userSlice.actions;
 // export du reducer
 export default userSlice.reducer;
 // export du sélecteur

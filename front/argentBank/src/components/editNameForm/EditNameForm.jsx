@@ -1,76 +1,38 @@
-import {useDispatch} from "react-redux";
-import {updateUserName} from "../../../redux/slice/userSlice.js";
-import {useEffect, useState} from "react";
-
-// TO FETCH USERNAME FROM SERVER
-function updateUserNameOnServer (newName) {
-    return fetch('http://localhost:3001/api/v1/user/profile', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`
-        },
-        body: JSON.stringify({userName: newName})
-    })
-}
-
-// TO FETCH USER ID (first & last name) FROM SERVER
-function getUserIdFromServer () {
-    return fetch('http://localhost:3001/api/v1/user/profile', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${sessionStorage.getItem('token')}`
-        }
-    })
-    .then((response) => response.json())
-        .then ((data) => data.body );
-}
+import {useDispatch, useSelector} from "react-redux";
+import {useState} from "react";
+import {selectUser, updateUserNameOnServer} from "../../../redux/slice/userSlice.js";
 
 // EDIT NAME FORM COMPONENT
 function EditNameForm ( {toggleModal} ) {
+const user = useSelector(selectUser);
 const dispatch = useDispatch();
-const [firstName, setFirstName] = useState('');
-const [lastName, setLastName] = useState('');
-
-    useEffect(() => {
-        getUserIdFromServer()
-        .then((user) => {
-            setFirstName(user.firstName);
-            setLastName(user.lastName);
-        })
-        .catch((error) => {
-            console.error("Error getting user id", error);
-        })
-    }, []);
+const [username, setUsername] = useState(user.profile.userName);
 
 // FUNCTION TO HANDLE USERNAME CHANGE
 const handleNameChange = (newName) => {
-    updateUserNameOnServer(newName)
-    .then (() => {
-        dispatch(updateUserName(newName));
-        toggleModal();
-    })
+    dispatch (updateUserNameOnServer(newName))
         .catch ((error) => {
             console.error ("Error updating user name", error);
         })
+        .finally (() => {
+            toggleModal();
+        });
 }
 
   return (
       <form className="edit-name-form" onSubmit={(evt) => {
           evt.preventDefault();
-          const newName = evt.target.username.value;
-          handleNameChange(newName);
+          handleNameChange(username);
       }}>
           <label htmlFor="username" className="field-label">User Name</label>
-          <input type="text" id="username" name="username" className="username-field"/>
+          <input type="text" id="username" name="username" className="username-field" defaultValue={username} onChange={(evt) => setUsername(evt.target.value)}/>
           <label htmlFor="firstName" className="field-label">First Name</label>
-            <input type="text" id="firstName" name="firstName" className="first-name-field" value={firstName} disabled/>
+            <input type="text" id="firstName" name="firstName" className="first-name-field" value={user.profile.firstName} disabled/>
             <label htmlFor="lastName" className="field-label">Last Name</label>
-            <input type="text" id="lastName" name="lastName" className="last-name-field" value={lastName} disabled/>
+            <input type="text" id="lastName" name="lastName" className="last-name-field" value={user.profile.lastName} disabled/>
           <div className="form-button-group">
           <button type="submit" className="form-button">Save</button>
-          <button type="submit" className="form-button" onClick={toggleModal}>Cancel</button>
+          <button className="form-button" onClick={toggleModal}>Cancel</button>
             </div>
       </form>
   );

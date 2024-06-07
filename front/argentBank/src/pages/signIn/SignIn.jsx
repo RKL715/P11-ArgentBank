@@ -56,7 +56,7 @@ const LoginForm = () => {
             if (payload.message.includes("Password")) {
                 setPasswordError("Mot de passe incorrect");
             }
-            if (payload.message.includes("User" && "Password")) {
+            if (payload.message.includes("User") && payload.message.includes("Password")){
                 setEmailError("Email incorrect");
                 setPasswordError("Mot de passe incorrect");
             }

@@ -1,4 +1,4 @@
-# Projet 11 - Argent Bank
+# Formation Intégrateur Web, Open-Classroom. Projet 11. "Argent Bank"
 
 ## Contexte
 
